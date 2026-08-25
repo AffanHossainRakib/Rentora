@@ -1,10 +1,11 @@
 model User {
-    id        String   @id @default(uuid())
-    name      String   @db.VarChar(255)
-    email     String   @unique
-    password  String
+    id       String @id @default(uuid())
+    name     String @db.VarChar(255)
+    email    String @unique
+    password String
+
     createdAt DateTime @default(now())
-    updatedAt DateTime
+    updatedAt DateTime @updatedAt
 
     @@map("users")
 }
