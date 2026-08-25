@@ -5,6 +5,8 @@ import config from "./config";
 import { userRoutes } from "./modules/user/user.route";
 import { sendResponse } from "./utils/sendResponse";
 import httpStatus from "http-status";
+import { notFound } from "./middlewares/notFound";
+import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 
 const app: Application = express();
 
@@ -34,5 +36,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1/users", userRoutes);
+
+app.use(notFound);
+app.use(globalErrorHandler);
 
 export default app;
