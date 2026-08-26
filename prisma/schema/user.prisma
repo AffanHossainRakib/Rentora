@@ -3,7 +3,7 @@ model User {
     name     String
     email    String  @unique
     password String
-    isActive Boolean
+    isActive Boolean @default(true)
     role     Role    @default(TENANT)
 
     createdAt DateTime @default(now()) @db.Timestamptz(0)
