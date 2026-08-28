@@ -8,6 +8,19 @@ import config from "../../config";
 
 const isProduction = config.node_env === "production";
 
+const registerUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const payload = req.body;
+    const user = await authService.registerUserIntoDB(payload);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: "User created successfully.",
+      data: { user },
+    });
+  },
+);
+
 const loginUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const payload = req.body;
@@ -36,4 +49,4 @@ const loginUser = catchAsync(
   },
 );
 
-export const authController = { loginUser };
+export const authController = { registerUser, loginUser };

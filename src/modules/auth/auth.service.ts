@@ -1,10 +1,53 @@
 import bcrypt from "bcryptjs";
 import httpStatus from "http-status";
 import { prisma } from "../../lib/prisma";
-import { loginUserPayload } from "./auth.interface";
+import { loginUserPayload, RegisterUserPayload } from "./auth.interface";
 import { jwtUtils } from "../../utils/jwt";
 import config from "../../config";
 import { AppError } from "../../errors/AppError";
+
+const registerUserIntoDB = async (payload: RegisterUserPayload) => {
+  const { name, email, password, role, bio, profilePicture } = payload;
+
+  const userExists = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (userExists) {
+    throw new AppError(
+      httpStatus.CONFLICT,
+      "User with this email already exists",
+    );
+  }
+
+  const hashedPassword = await bcrypt.hash(
+    password,
+    Number(config.bcrypt_salt_rounds) || 10,
+  );
+
+  const user = await prisma.user.create({
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+      role,
+      profile: {
+        create: {
+          bio,
+          profilePicture,
+        },
+      },
+    },
+    omit: {
+      password: true,
+    },
+    include: {
+      profile: true,
+    },
+  });
+
+  return user;
+};
 
 const DUMMY_PASSWORD_HASH =
   "$2b$10$EZODxWq31h9H.amvyCCB4uPCnum4mBAxroPhj.XmMBsd9biXbmUdW";
@@ -60,4 +103,4 @@ const loginUser = async (payload: loginUserPayload) => {
   };
 };
 
-export const authService = { loginUser };
+export const authService = { registerUserIntoDB, loginUser };

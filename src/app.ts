@@ -2,7 +2,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import config from "./config";
-import { userRoutes } from "./modules/user/user.route";
 import { sendResponse } from "./utils/sendResponse";
 import httpStatus from "http-status";
 import { notFound } from "./middlewares/notFound";
@@ -36,7 +35,6 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/auth", authRoutes);
 
 app.use(notFound);
