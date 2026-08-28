@@ -1,0 +1,81 @@
+import { NextFunction, Request, Response } from "express";
+import { Role } from "../../prisma/generated/prisma/enums";
+import { catchAsync } from "../utils/catchAsync";
+import { AppError } from "../errors/AppError";
+import httpStatus from "http-status";
+import { jwtUtils } from "../utils/jwt";
+import config from "../config";
+import { JwtPayload } from "jsonwebtoken";
+import { prisma } from "../lib/prisma";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+        name: string;
+        email: string;
+        role: Role;
+      };
+    }
+  }
+}
+
+export const auth = (...requiredRoles: Role[]) => {
+  return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.cookies.accessToken
+      ? req.cookies.accessToken
+      : req.headers.authorization?.startsWith("Bearer ")
+        ? req.headers.authorization.split(" ")[1]
+        : req.headers.authorization;
+
+    if (!token) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        "Authentication is required to access this resource",
+      );
+    }
+
+    const verifiedToken = jwtUtils.verifyToken(token, config.jwt_access_secret);
+    if (!verifiedToken) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        "Invalid or expired token. Please log in again.",
+      );
+    }
+
+    const { email, name, id, role } = verifiedToken as JwtPayload;
+
+    if (requiredRoles.length && !requiredRoles.includes(role)) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        "You do not have permission to access this resource",
+      );
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+        email,
+        name,
+        role,
+      },
+    });
+
+    if (!user?.isActive) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "Your account is deactivated. Please contact support.",
+      );
+    }
+
+    req.user = {
+      id,
+      email,
+      name,
+      role,
+    };
+
+    next();
+  });
+};
