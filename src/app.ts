@@ -7,6 +7,7 @@ import { sendResponse } from "./utils/sendResponse";
 import httpStatus from "http-status";
 import { notFound } from "./middlewares/notFound";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
+import { authRoutes } from "./modules/auth/auth.route";
 
 const app: Application = express();
 
@@ -36,6 +37,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/auth", authRoutes);
 
 app.use(notFound);
 app.use(globalErrorHandler);
