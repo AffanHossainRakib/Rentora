@@ -1,14 +1,19 @@
 import bcrypt from "bcryptjs";
+import httpStatus from "http-status";
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
 import { RegisterUserPayload } from "./user.interface";
 import { Role } from "../../../prisma/generated/prisma/enums";
+import { AppError } from "../../errors/AppError";
 
 const registerUserIntoDB = async (payload: RegisterUserPayload) => {
   const { name, email, password, role, bio, profilePicture } = payload;
 
   if (role === Role.ADMIN) {
-    throw new Error("You are not allowed to create an admin user");
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "You are not allowed to create an admin user",
+    );
   }
 
   const userExists = await prisma.user.findUnique({
@@ -16,7 +21,10 @@ const registerUserIntoDB = async (payload: RegisterUserPayload) => {
   });
 
   if (userExists) {
-    throw new Error("User with this email already exists");
+    throw new AppError(
+      httpStatus.CONFLICT,
+      "User with this email already exists",
+    );
   }
 
   const hashedPassword = await bcrypt.hash(
