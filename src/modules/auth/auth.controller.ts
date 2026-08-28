@@ -12,6 +12,7 @@ const registerUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const payload = req.body;
     const user = await authService.registerUserIntoDB(payload);
+
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
@@ -49,4 +50,17 @@ const loginUser = catchAsync(
   },
 );
 
-export const authController = { registerUser, loginUser };
+const getCurrentUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = await authService.getMyProfilefromDB(req.user?.id as string);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "User profile fetched successfully.",
+      data: { user },
+    });
+  },
+);
+
+export const authController = { registerUser, loginUser, getCurrentUser };

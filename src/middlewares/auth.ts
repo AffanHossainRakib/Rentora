@@ -37,14 +37,14 @@ export const auth = (...requiredRoles: Role[]) => {
     }
 
     const verifiedToken = jwtUtils.verifyToken(token, config.jwt_access_secret);
-    if (!verifiedToken) {
+    if (!verifiedToken.success) {
       throw new AppError(
         httpStatus.UNAUTHORIZED,
         "Invalid or expired token. Please log in again.",
       );
     }
 
-    const { email, name, id, role } = verifiedToken as JwtPayload;
+    const { email, name, id, role } = verifiedToken.data as JwtPayload;
 
     if (requiredRoles.length && !requiredRoles.includes(role)) {
       throw new AppError(
