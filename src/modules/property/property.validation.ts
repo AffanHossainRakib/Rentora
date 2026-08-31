@@ -16,7 +16,8 @@ export const updatePropertySchema = createPropertySchema.partial();
 export const getPropertiesQuerySchema = z.object({
   searchTerm: z.string().trim().optional(),
   location: z.string().trim().optional(),
-  categoryId: z.uuid("Invalid category id").optional(),
+  // categoryId: z.uuid("Invalid category id").optional(),
+  categoryName: z.string().trim().optional(),
   isAvailable: z.stringbool().optional(),
   priceMin: z.coerce.number().nonnegative().optional(),
   priceMax: z.coerce.number().nonnegative().optional(),
