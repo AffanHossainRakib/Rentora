@@ -6,7 +6,7 @@ export const createPropertySchema = z.object({
   isAvailable: z.boolean().default(true),
   location: z.string().trim().min(1, "Location is required"),
   price: z.number().positive("Price must be a positive number"),
-  categoryId: z.uuid("Invalid category id"),
+  category: z.string().trim().min(1, "Category is required"),
   amenities: z.array(z.string()).optional(),
   pictures: z.array(z.string()).optional(),
 });
@@ -16,8 +16,7 @@ export const updatePropertySchema = createPropertySchema.partial();
 export const getPropertiesQuerySchema = z.object({
   searchTerm: z.string().trim().optional(),
   location: z.string().trim().optional(),
-  // categoryId: z.uuid("Invalid category id").optional(),
-  category: z.string().trim().optional(), // Category Name
+  category: z.string().trim().optional(),
   isAvailable: z.stringbool().optional(),
   priceMin: z.coerce.number().nonnegative().optional(),
   priceMax: z.coerce.number().nonnegative().optional(),

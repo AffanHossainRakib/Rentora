@@ -8,7 +8,7 @@ import {
   GetPropertiesQuery,
   UpdatePropertyPayload,
 } from "./property.interface";
-import { assertCategory, assertPropertyOwnership } from "./property.utils";
+import { assertPropertyOwnership, findCategoryId } from "./property.utils";
 
 const getAllProperties = async (query: GetPropertiesQuery) => {
   const { searchTerm, location, category, isAvailable, priceMin, priceMax } =
@@ -47,14 +47,19 @@ const getAllProperties = async (query: GetPropertiesQuery) => {
       where,
       skip,
       take: limit,
-      orderBy: { createdAt: "desc" },
-      include: { category: true },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      include: { category: { select: { name: true } } },
     }),
     prisma.property.count({ where }),
   ]);
 
+  const shaped = properties.map(({ category, categoryId, ...rest }) => ({
+    ...rest,
+    category: category.name,
+  }));
+
   return {
-    properties,
+    properties: shaped,
     meta: {
       page,
       limit,
@@ -67,24 +72,35 @@ const getAllProperties = async (query: GetPropertiesQuery) => {
 const getPropertyById = async (id: string) => {
   const property = await prisma.property.findUnique({
     where: { id },
-    include: { category: true },
+    include: { category: { select: { name: true } } },
   });
 
   if (!property) {
     throw new AppError(httpStatus.NOT_FOUND, "Property not found");
   }
+  const shaped = {
+    ...property,
+    category: property.category.name,
+  };
 
-  return property;
+  return shaped;
 };
 
 const createProperty = async (
   userId: string,
   payload: CreatePropertyPayload,
 ) => {
-  await assertCategory(payload.categoryId);
+  const categoryId = await findCategoryId(payload.category);
+  const { category, ...restPayload } = payload;
+
+  const propertyData = {
+    ...restPayload,
+    categoryId,
+    userId,
+  };
 
   const property = await prisma.property.create({
-    data: { ...payload, userId },
+    data: { ...propertyData },
   });
 
   return property;
@@ -97,13 +113,15 @@ const updateProperty = async (
 ) => {
   await assertPropertyOwnership(userId, propertyId);
 
-  if (payload.categoryId) {
-    await assertCategory(payload.categoryId);
-  }
+  const { category, ...restPayload } = payload;
+  const propertyData = {
+    ...restPayload,
+    ...(category && { categoryId: await findCategoryId(category) }),
+  };
 
   const property = await prisma.property.update({
     where: { id: propertyId },
-    data: payload,
+    data: propertyData,
   });
 
   return property;

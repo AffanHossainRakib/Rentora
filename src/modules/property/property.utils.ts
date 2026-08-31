@@ -24,14 +24,15 @@ export const assertPropertyOwnership = async (
   return property;
 };
 
-export const assertCategory = async (categoryId: string) => {
+export const findCategoryId = async (categoryName: string) => {
   const category = await prisma.category.findUnique({
-    where: { id: categoryId },
+    where: { name: categoryName },
   });
 
   if (!category) {
     throw new AppError(httpStatus.BAD_REQUEST, "Invalid category id");
   }
 
-  return category;
+  console.log(category, "Category found");
+  return category.id;
 };
