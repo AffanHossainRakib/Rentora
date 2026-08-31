@@ -11,14 +11,8 @@ import {
 import { assertCategory, assertPropertyOwnership } from "./property.utils";
 
 const getAllProperties = async (query: GetPropertiesQuery) => {
-  const {
-    searchTerm,
-    location,
-    categoryName,
-    isAvailable,
-    priceMin,
-    priceMax,
-  } = query;
+  const { searchTerm, location, category, isAvailable, priceMin, priceMax } =
+    query;
 
   const { page, limit, skip } = getPaginationParams(query);
 
@@ -34,9 +28,9 @@ const getAllProperties = async (query: GetPropertiesQuery) => {
     ...(location && {
       location: { contains: location, mode: "insensitive" as const },
     }),
-    ...(categoryName && {
+    ...(category && {
       category: {
-        name: { contains: categoryName, mode: "insensitive" as const },
+        name: { contains: category, mode: "insensitive" as const },
       },
     }),
     ...(isAvailable !== undefined && { isAvailable }),
