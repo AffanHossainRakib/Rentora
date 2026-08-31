@@ -44,11 +44,11 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/categories", categoryRoutes);
-// app.use("/api/v1/properties", propertyRoutes);
-// app.use("/api/v1/landlord/properties", landlordPropertyRoutes);
-// app.use("/api/v1/landlord/requests", landlordRequestRoutes);
-// app.use("/api/v1/rentals", rentalRoutes);
-// app.use("/api/v1/reviews", reviewRoutes);
+app.use("/api/v1/properties", propertyRoutes);
+app.use("/api/v1/landlord/properties", landlordPropertyRoutes);
+app.use("/api/v1/landlord/requests", landlordRequestRoutes);
+app.use("/api/v1/rentals", rentalRoutes);
+app.use("/api/v1/reviews", reviewRoutes);
 // app.use("/api/v1/admin", adminRoutes);
 
 app.use(notFound);
