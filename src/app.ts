@@ -49,7 +49,7 @@ app.use("/api/v1/landlord/properties", landlordPropertyRoutes);
 app.use("/api/v1/landlord/requests", landlordRequestRoutes);
 app.use("/api/v1/rentals", rentalRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
-// app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 app.use(notFound);
 app.use(globalErrorHandler);
