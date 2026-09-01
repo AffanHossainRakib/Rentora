@@ -3,7 +3,7 @@ import { catchAsync } from "../utils/catchAsync";
 import { NextFunction, Request, Response } from "express";
 
 export type RequestSchema = {
-  body?: ZodType;
+  body?: ZodType | ((req: Request) => ZodType);
   params?: ZodType;
   query?: ZodType;
 };
@@ -19,7 +19,9 @@ declare global {
 export const validateRequest = (schema: RequestSchema) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     if (schema?.body) {
-      req.body = schema.body.parse(req.body);
+      const bodySchema =
+        typeof schema.body === "function" ? schema.body(req) : schema.body;
+      req.body = bodySchema.parse(req.body);
     }
     if (schema?.params) {
       req.params = schema.params.parse(req.params) as typeof req.params;
