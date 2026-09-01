@@ -6,9 +6,8 @@ const getAllCategories = async () => {
     orderBy: { name: "asc" },
     select: { name: true },
   });
-  const shaped = categories.map((category) => category.name);
 
-  return { categories: shaped };
+  return categories.map((category) => category.name);
 };
 
 const createCategory = async (payload: CreateCategoryPayload) => {
