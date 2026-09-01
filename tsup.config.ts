@@ -1,8 +1,8 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/server.ts"],
-  format: ["esm", "cjs"], // Keep this as ESM
+  entry: ["src/server.ts", "src/app.ts", "src/serverless.ts"],
+  format: ["esm"], // Keep this as ESM
   target: "esnext",
   outDir: "dist",
   clean: true,
