@@ -22,3 +22,5 @@ async function main() {
 if (config.node_env !== "production") {
   main();
 }
+
+export default app;
