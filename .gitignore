@@ -5,6 +5,7 @@ generated/
 .env.*
 !.env.example
 
+.env.production
 /generated/prisma
 /docs
 .vercel
