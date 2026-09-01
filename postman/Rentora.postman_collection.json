@@ -581,7 +581,12 @@
           "name": "Get Single Payment",
           "request": {
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "{{rentora}}/payments/8ab7e113-7e28-4ffe-ab5c-d5b5b4ecbf01",
+              "host": ["{{rentora}}"],
+              "path": ["payments", "8ab7e113-7e28-4ffe-ab5c-d5b5b4ecbf01"]
+            }
           },
           "response": []
         }
