@@ -18,5 +18,8 @@ async function main() {
     process.exit(1);
   }
 }
+if (config.node_env !== "production") {
+  main();
+}
 
-main();
+export default app;
