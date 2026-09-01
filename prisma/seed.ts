@@ -26,14 +26,14 @@ async function main() {
   ]);
 
   const password = await bcrypt.hash(
-    "Password123!",
-    Number(config.bcrypt_salt_rounds) || 10,
+    "password",
+    Number(config.bcrypt_salt_rounds),
   );
 
   const admin = await prisma.user.create({
     data: {
       name: "Admin User",
-      email: "admin@rentnest.test",
+      email: "admin@rentora.test",
       password,
       isActive: true,
       role: Role.ADMIN,
@@ -42,7 +42,7 @@ async function main() {
   const landlord1 = await prisma.user.create({
     data: {
       name: "Karim Rahman",
-      email: "landlord1@rentnest.test",
+      email: "landlord1@rentora.test",
       password,
       isActive: true,
       role: Role.LANDLORD,
@@ -51,7 +51,7 @@ async function main() {
   const landlord2 = await prisma.user.create({
     data: {
       name: "Fatima Begum",
-      email: "landlord2@rentnest.test",
+      email: "landlord2@rentora.test",
       password,
       isActive: true,
       role: Role.LANDLORD,
@@ -60,7 +60,7 @@ async function main() {
   const tenant1 = await prisma.user.create({
     data: {
       name: "Nusrat Jahan",
-      email: "tenant1@rentnest.test",
+      email: "tenant1@rentora.test",
       password,
       isActive: true,
       role: Role.TENANT,
@@ -69,7 +69,7 @@ async function main() {
   const tenant2 = await prisma.user.create({
     data: {
       name: "Rafiq Islam",
-      email: "tenant2@rentnest.test",
+      email: "tenant2@rentora.test",
       password,
       isActive: true,
       role: Role.TENANT,
