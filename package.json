@@ -5,11 +5,13 @@
   "main": "server.ts",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "prisma generate && tsc",
+    "build": "prisma generate && tsup",
     "start": "node dist/server.js",
-    "postinstall": "prisma generate",
-    "stripe:webhook": "stripe listen --forward-to localhost:5000/api/v1/payments/webhook",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tsx --test src/**/*.test.ts",
+    "deploy": "npm run build && vercel --prod",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "stripe:webhook": "stripe listen --forward-to localhost:5000/api/v1/payments/webhook"
   },
   "repository": {
     "type": "git",
@@ -38,6 +40,7 @@
     "@types/node": "^26.3.0",
     "@types/pg": "^8.23.1",
     "prisma": "^7.10.0",
+    "tsup": "^8.5.1",
     "tsx": "^4.23.12",
     "typescript": "^7.0.2"
   },
