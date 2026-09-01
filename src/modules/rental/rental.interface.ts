@@ -9,7 +9,7 @@ export type CreateRentalRequestPayload = z.infer<
   typeof createRentalRequestSchema
 >;
 export type UpdateRentalRequestStatusPayload = z.infer<
-  typeof updateRentalRequestStatusSchema
+  ReturnType<typeof updateRentalRequestStatusSchema>
 >;
 export type GetRentalRequestsQuery = z.infer<
   typeof getRentalRequestsQuerySchema

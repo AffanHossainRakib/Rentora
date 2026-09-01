@@ -77,6 +77,7 @@ const updateRentalRequestStatus = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const rentalRequest = await rentalService.updateRentalRequestStatus(
       req.user?.id as string,
+      req.user?.role as Role,
       req.params.id as string,
       req.body.status,
     );

@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { RentalRequestStatus } from "../../../prisma/generated/prisma/enums";
+import {
+  Role,
+  RentalRequestStatus,
+} from "../../../prisma/generated/prisma/enums";
 
 export const createRentalRequestSchema = z
   .object({
@@ -12,11 +15,26 @@ export const createRentalRequestSchema = z
     path: ["endDate"],
   });
 
-export const updateRentalRequestStatusSchema = z.object({
-  status: z.enum([RentalRequestStatus.APPROVED, RentalRequestStatus.REJECTED], {
-    error: "Status must be either APPROVED or REJECTED",
-  }),
-});
+export const updateRentalRequestStatusSchema = (role: Role) => {
+  const isAdmin = role === Role.ADMIN;
+
+  return z.object({
+    status: z.enum(
+      isAdmin
+        ? [
+            RentalRequestStatus.APPROVED,
+            RentalRequestStatus.REJECTED,
+            RentalRequestStatus.COMPLETED,
+          ]
+        : [RentalRequestStatus.APPROVED, RentalRequestStatus.REJECTED],
+      {
+        error: isAdmin
+          ? "Status must be one of APPROVED, REJECTED, or COMPLETED"
+          : "Status must be one of APPROVED or REJECTED",
+      },
+    ),
+  });
+};
 
 export const getRentalRequestsQuerySchema = z.object({
   status: z.enum(RentalRequestStatus).optional(),

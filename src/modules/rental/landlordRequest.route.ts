@@ -19,8 +19,10 @@ router.get(
 
 router.patch(
   "/:id",
-  auth(Role.LANDLORD),
-  validateRequest({ body: updateRentalRequestStatusSchema }),
+  auth(Role.LANDLORD, Role.ADMIN),
+  validateRequest({
+    body: (req) => updateRentalRequestStatusSchema(req.user!.role),
+  }),
   rentalController.updateRentalRequestStatus,
 );
 

@@ -10,6 +10,10 @@ import {
   CreateRentalRequestPayload,
   GetRentalRequestsQuery,
 } from "./rental.interface";
+import {
+  ALLOWED_STATUS_TRANSITIONS_ADMIN,
+  ALLOWED_STATUS_TRANSITIONS_LANDLORD,
+} from "./rental.utils";
 
 const createRentalRequest = async (
   tenantId: string,
@@ -149,35 +153,40 @@ const getLandlordRequests = async (
 
 const updateRentalRequestStatus = async (
   landlordUserId: string,
+  role: Role,
   requestId: string,
   status:
     | typeof RentalRequestStatus.APPROVED
-    | typeof RentalRequestStatus.REJECTED,
+    | typeof RentalRequestStatus.REJECTED
+    | typeof RentalRequestStatus.COMPLETED,
 ) => {
   const rentalRequest = await prisma.rentalRequest.findUnique({
     where: { id: requestId },
-    include: { property: true },
+    include: {
+      property: { include: { category: { select: { name: true } } } },
+    },
   });
 
   if (!rentalRequest) {
     throw new AppError(httpStatus.NOT_FOUND, "Rental request not found");
   }
 
-  if (rentalRequest.property.userId !== landlordUserId) {
+  if (rentalRequest.property.userId !== landlordUserId && role !== Role.ADMIN) {
     throw new AppError(
       httpStatus.FORBIDDEN,
       "You do not have permission to update this rental request",
     );
   }
 
-  if (
-    rentalRequest.status !== RentalRequestStatus.PENDING &&
-    rentalRequest.status !== RentalRequestStatus.APPROVED &&
-    rentalRequest.status !== RentalRequestStatus.REJECTED
-  ) {
+  const allowedTransitions =
+    role === Role.ADMIN
+      ? ALLOWED_STATUS_TRANSITIONS_ADMIN
+      : ALLOWED_STATUS_TRANSITIONS_LANDLORD;
+
+  if (!(allowedTransitions[rentalRequest.status] ?? []).includes(status)) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      `Cannot ${status === RentalRequestStatus.APPROVED ? "approve" : "reject"} a rental request that is not PENDING, APPROVED, or REJECTED`,
+      `Cannot change status from ${rentalRequest.status} to ${status}`,
     );
   }
 
