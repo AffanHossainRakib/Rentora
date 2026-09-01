@@ -19,4 +19,6 @@ async function main() {
   }
 }
 
-main();
+if (config.node_env !== "production") {
+  main();
+}
