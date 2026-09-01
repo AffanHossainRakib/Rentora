@@ -1,0 +1,606 @@
+{
+  "info": {
+    "_postman_id": "775b3210-84d4-4dc7-b71f-323196b5f624",
+    "name": "Rentora",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "45904896"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register New User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Md. Affan Hossain Rakib\",\r\n    \"email\": \"affanhossainrakib+admin@gmail.com\",\r\n    \"password\": \"password\",\r\n    \"role\": \"TENANT\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentora}}/auth/register",
+              "host": ["{{rentora}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Admin\r\n// {\r\n//     \"email\": \"affanhossainrakib+admin@gmail.com\",\r\n//     \"password\": \"password\"\r\n// }\r\n// Landlord\r\n// {\r\n//     \"email\": \"affanhossainrakib+landlord@gmail.com\",\r\n//     \"password\": \"password\"\r\n// }\r\n// Tenant\r\n{\r\n    \"email\": \"affanhossainrakib+tenant@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentora}}/auth/login",
+              "host": ["{{rentora}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Profile",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "    "
+            },
+            "url": {
+              "raw": "{{rentora}}/auth/me",
+              "host": ["{{rentora}}"],
+              "path": ["auth", "me"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get All Property Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentora}}/categories",
+              "host": ["{{rentora}}"],
+              "path": ["categories"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Landlord Properties",
+      "item": [
+        {
+          "name": "Get All Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentora}}/properties",
+              "host": ["{{rentora}}"],
+              "path": ["properties"],
+              "query": [
+                {
+                  "key": "searchTerm",
+                  "value": "cheap",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "location",
+                  "value": "dha",
+                  "disabled": true
+                },
+                {
+                  "key": "isAvailable",
+                  "value": "False",
+                  "description": "True or False // Boolean value",
+                  "disabled": true
+                },
+                {
+                  "key": "priceMin",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "priceMax",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "3",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "5",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "category",
+                  "value": "Apartment",
+                  "description": "Apartment, House, Studio. // Available category names from the /categories route",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Property by Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentora}}/properties/4298a6a3-fdd1-4bd0-900b-5a4bd1e91fdc",
+              "host": ["{{rentora}}"],
+              "path": ["properties", "4298a6a3-fdd1-4bd0-900b-5a4bd1e91fdc"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create New Property",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"Boys Hostel\",\r\n    \"description\": \"Only available for Job holder\",\r\n    \"location\": \"Baridhara\",\r\n    \"price\": 50000,\r\n    \"category\": \"Studio\" \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentora}}/landlord/properties",
+              "host": ["{{rentora}}"],
+              "path": ["landlord", "properties"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Single Property",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"pictures\": [\"www.facebook.com\", \"www.google.com\"]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentora}}/landlord/properties/fd6027e1-b91c-44b5-8ab0-1fc61112d6ae",
+              "host": ["{{rentora}}"],
+              "path": [
+                "landlord",
+                "properties",
+                "fd6027e1-b91c-44b5-8ab0-1fc61112d6ae"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Single Property",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{rentora}}/landlord/properties/55ccb80d-dfd0-4298-9589-ee1cb6c5f27b",
+              "host": ["{{rentora}}"],
+              "path": [
+                "landlord",
+                "properties",
+                "55ccb80d-dfd0-4298-9589-ee1cb6c5f27b"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Landlord Request",
+      "item": [
+        {
+          "name": "Get All Request of my enlisted property",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentora}}/landlord/requests",
+              "host": ["{{rentora}}"],
+              "path": ["landlord", "requests"],
+              "query": [
+                {
+                  "key": "searchTerm",
+                  "value": "cheap",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "location",
+                  "value": "dha",
+                  "disabled": true
+                },
+                {
+                  "key": "isAvailable",
+                  "value": "False",
+                  "description": "True or False // Boolean value",
+                  "disabled": true
+                },
+                {
+                  "key": "priceMin",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "priceMax",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "category",
+                  "value": "Studio",
+                  "description": "Apartment, House, Studio. // Available category names from the /categories route",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Request Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\" : \"REJECTED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentora}}/landlord/requests/b99e816c-2da3-44f5-8a75-1bfcc208d8f8",
+              "host": ["{{rentora}}"],
+              "path": [
+                "landlord",
+                "requests",
+                "b99e816c-2da3-44f5-8a75-1bfcc208d8f8"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tentant Request",
+      "item": [
+        {
+          "name": "Create Rental Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"propertyId\": \"4298a6a3-fdd1-4bd0-900b-5a4bd1e91fdc\",\r\n    \"startDate\": \"2026-09-01T00:00:00.000Z\",\r\n    \"endDate\": \"2026-09-15T00:00:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentora}}/rentals",
+              "host": ["{{rentora}}"],
+              "path": ["rentals"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Rental Request",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{rentora}}/rentals",
+              "host": ["{{rentora}}"],
+              "path": ["rentals"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "2",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "COMPLETED",
+                  "description": "APPROVED, PENDING, REJECTED, ACTIVE, COMPLETED",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Rental Request",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{rentora}}/rentals/8da8b213-f33c-46fb-985c-287b141cd220",
+              "host": ["{{rentora}}"],
+              "path": ["rentals", "8da8b213-f33c-46fb-985c-287b141cd220"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Review",
+      "item": [
+        {
+          "name": "Write Rental Review",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"rentalRequestId\": \"8da8b213-f33c-46fb-985c-287b141cd220\",\r\n    \"rating\": 5, // number between 1 to 5\r\n    \"review\": \"This is very good\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentora}}/reviews",
+              "host": ["{{rentora}}"],
+              "path": ["reviews"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentora}}/admin/users?role=TENANT",
+              "host": ["{{rentora}}"],
+              "path": ["admin", "users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "3",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "2",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "role",
+                  "value": "TENANT",
+                  "description": "ADMIN",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"isActive\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentora}}/admin/users/feee1ee9-a64d-463b-83ea-769ad02d3c3b",
+              "host": ["{{rentora}}"],
+              "path": ["admin", "users", "feee1ee9-a64d-463b-83ea-769ad02d3c3b"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentora}}/admin/properties",
+              "host": ["{{rentora}}"],
+              "path": ["admin", "properties"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Rentals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentora}}/admin/rentals?page=1&limit=1",
+              "host": ["{{rentora}}"],
+              "path": ["admin", "rentals"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payment",
+      "item": [
+        {
+          "name": "Create a payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"rentalRequestId\": \"8da8b213-f33c-46fb-985c-287b141cd220\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentora}}/payments/create",
+              "host": ["{{rentora}}"],
+              "path": ["payments", "create"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get my payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentora}}/payments",
+              "host": ["{{rentora}}"],
+              "path": ["payments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Payment",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API Status Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": [""]
+        }
+      },
+      "response": []
+    }
+  ]
+}
