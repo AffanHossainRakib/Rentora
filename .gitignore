@@ -2,5 +2,9 @@ node_modules/
 dist/
 generated/
 .env
+.env.*
+!.env.example
 
 /generated/prisma
+/docs
+.vercel
