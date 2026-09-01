@@ -14,6 +14,7 @@ import { rentalRoutes } from "./modules/rental/rental.route";
 import { landlordRequestRoutes } from "./modules/rental/landlordRequest.route";
 import { reviewRoutes } from "./modules/review/review.route";
 import { adminRoutes } from "./modules/admin/admin.route";
+import { paymentRoutes } from "./modules/payment/payment.route";
 
 const app: Application = express();
 
@@ -24,10 +25,7 @@ app.use(
   }),
 );
 
-app.use(
-  "/api/v1/subscription/webhook",
-  express.raw({ type: "application/json" }),
-);
+app.use("/api/v1/payments/webhook", express.raw({ type: "application/json" }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -50,6 +48,7 @@ app.use("/api/v1/landlord/requests", landlordRequestRoutes);
 app.use("/api/v1/rentals", rentalRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/payments", paymentRoutes);
 
 app.use(notFound);
 app.use(globalErrorHandler);
