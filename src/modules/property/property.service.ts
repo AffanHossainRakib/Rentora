@@ -78,9 +78,10 @@ const getPropertyById = async (id: string) => {
   if (!property) {
     throw new AppError(httpStatus.NOT_FOUND, "Property not found");
   }
+  const { category, categoryId, ...propertyRest } = property;
   const shaped = {
-    ...property,
-    category: property.category.name,
+    ...propertyRest,
+    category: category.name,
   };
 
   return shaped;
