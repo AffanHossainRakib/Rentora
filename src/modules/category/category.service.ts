@@ -13,9 +13,11 @@ const getAllCategories = async () => {
 const createCategory = async (payload: CreateCategoryPayload) => {
   const { name } = payload;
 
-  const formatedName =
-    name.trim().toLowerCase().at(0)?.toUpperCase() +
-    name.trim().toLowerCase().slice(1);
+  const formatedName = name
+    .trim()
+    .split(/\s+/)
+    .map((word) => word[0]!.toUpperCase() + word.slice(1).toLowerCase())
+    .join("-");
 
   const category = await prisma.category.create({
     data: { name: formatedName },
