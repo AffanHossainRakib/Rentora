@@ -6,7 +6,6 @@ import { AppError } from "../errors/AppError";
 import config from "../config";
 
 const isProduction = config.node_env === "production";
-// const isProduction = true;
 
 export const globalErrorHandler = (
   err: any,
