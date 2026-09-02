@@ -16,7 +16,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"name\": \"Md. Affan Hossain Rakib\",\r\n    \"email\": \"affanhossainrakib+admin@gmail.com\",\r\n    \"password\": \"password\",\r\n    \"role\": \"TENANT\"\r\n}",
+              "raw": "{\r\n    \"name\": \"Admin 2\",\r\n    \"email\": \"admin2@rentora.test\",\r\n    \"password\": \"password\",\r\n    \"role\": \"TENANT\"\r\n}\r\n\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -38,7 +38,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "// Admin\r\n// {\r\n//     \"email\": \"affanhossainrakib+admin@gmail.com\",\r\n//     \"password\": \"password\"\r\n// }\r\n// Landlord\r\n// {\r\n//     \"email\": \"affanhossainrakib+landlord@gmail.com\",\r\n//     \"password\": \"password\"\r\n// }\r\n// Tenant\r\n{\r\n    \"email\": \"affanhossainrakib+tenant@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
+              "raw": "// Admin 1\r\n// {\r\n//     \"email\": \"admin@rentora.test\",\r\n//     \"password\": \"password\"\r\n// }\r\n// Admin 2\r\n// {\r\n//     \"email\": \"admin2@rentora.test\",\r\n//     \"password\": \"password\"\r\n// }\r\n// Landlord 1\r\n// {\r\n//     \"email\": \"landlord1@rentora.test\",\r\n//     \"password\": \"password\"\r\n// }\r\n// Landlord 2\r\n// {\r\n//     \"email\": \"landlord2@rentora.test\",\r\n//     \"password\": \"password\"\r\n// }\r\n// Tenant 1\r\n// {\r\n//     \"email\": \"tenant1@rentora.test\",\r\n//     \"password\": \"password\"\r\n// }\r\n// Tenant 2\r\n{\r\n    \"email\": \"tenant2@rentora.test\",\r\n    \"password\": \"password\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -79,10 +79,32 @@
       "name": "Categories",
       "item": [
         {
-          "name": "Get All Property Categories",
+          "name": "Get All Categories",
           "request": {
             "method": "GET",
             "header": [],
+            "url": {
+              "raw": "{{rentora}}/categories",
+              "host": ["{{rentora}}"],
+              "path": ["categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"pent house\"\r\n}   ",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
               "raw": "{{rentora}}/categories",
               "host": ["{{rentora}}"],
@@ -108,49 +130,50 @@
               "query": [
                 {
                   "key": "searchTerm",
-                  "value": "cheap",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
-                  "key": "location",
-                  "value": "dha",
-                  "disabled": true
-                },
-                {
-                  "key": "isAvailable",
-                  "value": "False",
-                  "description": "True or False // Boolean value",
-                  "disabled": true
-                },
-                {
-                  "key": "priceMin",
-                  "value": "",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
-                  "key": "priceMax",
-                  "value": "",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
-                  "key": "page",
-                  "value": "3",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
-                  "key": "limit",
-                  "value": "5",
-                  "type": "text",
+                  "value": "Compact",
                   "disabled": true
                 },
                 {
                   "key": "category",
                   "value": "Apartment",
                   "description": "Apartment, House, Studio. // Available category names from the /categories route",
+                  "disabled": true
+                },
+                {
+                  "key": "location",
+                  "value": "Chittagong",
+                  "disabled": true
+                },
+                {
+                  "key": "isAvailable",
+                  "value": "false",
+                  "description": "true or false",
+                  "disabled": true
+                },
+                {
+                  "key": "priceMin",
+                  "value": "25000",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "priceMax",
+                  "value": "25000",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "2",
+                  "description": "Integer Type",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "3",
+                  "description": "Integer Type",
+                  "type": "text",
                   "disabled": true
                 }
               ]
@@ -164,9 +187,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{rentora}}/properties/4298a6a3-fdd1-4bd0-900b-5a4bd1e91fdc",
+              "raw": "{{rentora}}/properties/a87d1e1e-7b07-4ad3-a75b-154f39e963e6",
               "host": ["{{rentora}}"],
-              "path": ["properties", "4298a6a3-fdd1-4bd0-900b-5a4bd1e91fdc"]
+              "path": ["properties", "a87d1e1e-7b07-4ad3-a75b-154f39e963e6"]
             }
           },
           "response": []
@@ -178,7 +201,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"title\": \"Boys Hostel\",\r\n    \"description\": \"Only available for Job holder\",\r\n    \"location\": \"Baridhara\",\r\n    \"price\": 50000,\r\n    \"category\": \"Studio\" \r\n}",
+              "raw": "{\r\n    \"title\": \"Boys Hostel\",\r\n    \"description\": \"Only available for Job holder\",\r\n    \"location\": \"Pent-House\",\r\n    \"price\": 50000,\r\n    \"category\": \"Studio\" \r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -200,7 +223,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"pictures\": [\"www.facebook.com\", \"www.google.com\"]\r\n}",
+              "raw": "{\r\n    \"amenities\": [\r\n        \"Wifi\",\r\n        \"Lift\",\r\n        \"Generator\"\r\n    ]\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -208,12 +231,12 @@
               }
             },
             "url": {
-              "raw": "{{rentora}}/landlord/properties/fd6027e1-b91c-44b5-8ab0-1fc61112d6ae",
+              "raw": "{{rentora}}/landlord/properties/1ccc61f6-f9a6-4df8-aaa4-11ed561f8371",
               "host": ["{{rentora}}"],
               "path": [
                 "landlord",
                 "properties",
-                "fd6027e1-b91c-44b5-8ab0-1fc61112d6ae"
+                "1ccc61f6-f9a6-4df8-aaa4-11ed561f8371"
               ]
             }
           },
@@ -225,12 +248,12 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{rentora}}/landlord/properties/55ccb80d-dfd0-4298-9589-ee1cb6c5f27b",
+              "raw": "{{rentora}}/landlord/properties/3109ffbf-1838-4293-a26f-1cd54ca82a24",
               "host": ["{{rentora}}"],
               "path": [
                 "landlord",
                 "properties",
-                "55ccb80d-dfd0-4298-9589-ee1cb6c5f27b"
+                "3109ffbf-1838-4293-a26f-1cd54ca82a24"
               ]
             }
           },
@@ -310,7 +333,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"status\" : \"REJECTED\"\r\n}",
+              "raw": "{\r\n    \"status\" : \"APPROVED\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -318,12 +341,12 @@
               }
             },
             "url": {
-              "raw": "{{rentora}}/landlord/requests/b99e816c-2da3-44f5-8a75-1bfcc208d8f8",
+              "raw": "{{rentora}}/landlord/requests/c814e0e9-e948-4e38-b788-63ccbc2c2dcc",
               "host": ["{{rentora}}"],
               "path": [
                 "landlord",
                 "requests",
-                "b99e816c-2da3-44f5-8a75-1bfcc208d8f8"
+                "c814e0e9-e948-4e38-b788-63ccbc2c2dcc"
               ]
             }
           },
@@ -341,7 +364,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"propertyId\": \"4298a6a3-fdd1-4bd0-900b-5a4bd1e91fdc\",\r\n    \"startDate\": \"2026-09-01T00:00:00.000Z\",\r\n    \"endDate\": \"2026-09-15T00:00:00.000Z\"\r\n}",
+              "raw": "{\r\n    \"propertyId\": \"1ccc61f6-f9a6-4df8-aaa4-11ed561f8371\",\r\n    \"startDate\": \"2026-09-02T00:00:00.000Z\",\r\n    \"endDate\": \"2026-09-28T00:00:00.000Z\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -369,7 +392,7 @@
               "raw": ""
             },
             "url": {
-              "raw": "{{rentora}}/rentals",
+              "raw": "{{rentora}}/rentals?status=APPROVED",
               "host": ["{{rentora}}"],
               "path": ["rentals"],
               "query": [
@@ -385,9 +408,8 @@
                 },
                 {
                   "key": "status",
-                  "value": "COMPLETED",
-                  "description": "APPROVED, PENDING, REJECTED, ACTIVE, COMPLETED",
-                  "disabled": true
+                  "value": "APPROVED",
+                  "description": "APPROVED, PENDING, REJECTED, ACTIVE, COMPLETED"
                 }
               ]
             }
@@ -407,9 +429,9 @@
               "raw": ""
             },
             "url": {
-              "raw": "{{rentora}}/rentals/8da8b213-f33c-46fb-985c-287b141cd220",
+              "raw": "{{rentora}}/rentals/c814e0e9-e948-4e38-b788-63ccbc2c2dcc",
               "host": ["{{rentora}}"],
-              "path": ["rentals", "8da8b213-f33c-46fb-985c-287b141cd220"]
+              "path": ["rentals", "c814e0e9-e948-4e38-b788-63ccbc2c2dcc"]
             }
           },
           "response": []
@@ -452,7 +474,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{rentora}}/admin/users?role=TENANT",
+              "raw": "{{rentora}}/admin/users",
               "host": ["{{rentora}}"],
               "path": ["admin", "users"],
               "query": [
@@ -472,7 +494,7 @@
                   "key": "role",
                   "value": "TENANT",
                   "description": "ADMIN",
-                  "type": "text"
+                  "disabled": true
                 }
               ]
             }
@@ -520,17 +542,19 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{rentora}}/admin/rentals?page=1&limit=1",
+              "raw": "{{rentora}}/admin/rentals",
               "host": ["{{rentora}}"],
               "path": ["admin", "rentals"],
               "query": [
                 {
                   "key": "page",
-                  "value": "1"
+                  "value": "1",
+                  "disabled": true
                 },
                 {
                   "key": "limit",
-                  "value": "1"
+                  "value": "1",
+                  "disabled": true
                 }
               ]
             }
@@ -549,7 +573,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"rentalRequestId\": \"8da8b213-f33c-46fb-985c-287b141cd220\"\r\n}",
+              "raw": "{\r\n    \"rentalRequestId\": \"c814e0e9-e948-4e38-b788-63ccbc2c2dcc\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -583,9 +607,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{rentora}}/payments/8ab7e113-7e28-4ffe-ab5c-d5b5b4ecbf01",
+              "raw": "{{rentora}}/payments/59d19be1-412f-410a-959d-c893cb62b57b",
               "host": ["{{rentora}}"],
-              "path": ["payments", "8ab7e113-7e28-4ffe-ab5c-d5b5b4ecbf01"]
+              "path": ["payments", "59d19be1-412f-410a-959d-c893cb62b57b"]
             }
           },
           "response": []
@@ -598,10 +622,9 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:5000/",
+          "raw": "http://api.rentora.itsaffan.com/",
           "protocol": "http",
-          "host": ["localhost"],
-          "port": "5000",
+          "host": ["api", "rentora", "itsaffan", "com"],
           "path": [""]
         }
       },
