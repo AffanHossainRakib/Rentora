@@ -34,6 +34,27 @@ const createRentalRequest = async (
     );
   }
 
+  const existingRequest = await prisma.rentalRequest.findFirst({
+    where: {
+      userId: tenantId,
+      propertyId: payload.propertyId,
+      status: {
+        in: [
+          RentalRequestStatus.PENDING,
+          RentalRequestStatus.APPROVED,
+          RentalRequestStatus.ACTIVE,
+        ],
+      },
+    },
+  });
+
+  if (existingRequest) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "You already have an active request for this property",
+    );
+  }
+
   const rentalRequest = await prisma.rentalRequest.create({
     data: {
       userId: tenantId,
