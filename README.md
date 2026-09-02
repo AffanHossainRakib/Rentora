@@ -56,6 +56,8 @@ Each module follows the same layout: `*.route.ts` → `*.controller.ts` → `*.s
 
 Full endpoint reference, request/response shapes, and auth details: **[`postman/API_DOCUMENTATION.md`](./postman/API_DOCUMENTATION.md)**.
 
+Live, browsable API docs: **https://documenter.getpostman.com/view/45904896/2sBYAvuVBs**
+
 Import [`postman/Rentora.postman_collection.json`](./postman/Rentora.postman_collection.json) with its matching environment file to try it live.
 
 Quick overview — all routes are under `/api/v1`:
