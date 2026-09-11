@@ -64,7 +64,7 @@ Quick overview — all routes are under `/api/v1`:
 
 | Resource | Base path | Roles |
 |---|---|---|
-| Auth | `/auth` | public register/login, `/auth/me` for any signed-in user |
+| Auth | `/auth` | public register/login/refresh-token/logout, `/auth/me` for any signed-in user |
 | Categories | `/categories` | public read, admin write |
 | Properties | `/properties` | public read |
 | Landlord properties | `/landlord/properties` | landlord |
@@ -76,4 +76,8 @@ Quick overview — all routes are under `/api/v1`:
 
 ## Environment variables
 
-See [`.env.example`](./.env.example) for the full list: database connection, port/app URL, bcrypt rounds, JWT secrets/expiry, and Stripe keys.
+See [`.env.example`](./.env.example) for the full list: database connection, port/app URL, bcrypt rounds, JWT secrets/expiry, Stripe keys, and:
+
+| Variable | Purpose |
+|---|---|
+| `MOBILE_REDIRECT_PREFIXES` | Comma-separated URL prefixes (e.g. `rentora://,exp://`) the mobile app may pass as `redirectUrl` to `POST /payments/create`. Any other `redirectUrl` is rejected with `400`. Leave empty to disable mobile redirects. |

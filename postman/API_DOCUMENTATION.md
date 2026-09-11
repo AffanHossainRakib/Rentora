@@ -23,6 +23,8 @@ Postman keeps cookies automatically once you log in through it, so no manual hea
 Authorization: Bearer <accessToken>
 ```
 
+**Mobile / non-cookie clients:** `POST /auth/login` also returns both tokens in `data`. Store them in secure storage, send `Authorization: Bearer <accessToken>`, and when the access token expires, call `POST /auth/refresh-token` with `{ "refreshToken": "..." }` to get a new one. The cookie is checked before the header, so don't send both.
+
 Roles: **TENANT**, **LANDLORD**, **ADMIN** (`role` enum). Chosen at registration (`TENANT` or `LANDLORD` only — `ADMIN` cannot self-register). A deactivated user (`isActive: false`) is rejected with `403` on every subsequent request even with a valid token.
 
 ---
@@ -87,7 +89,21 @@ Validation: `name` non-empty · `email` valid email · `password` ≥ 8 chars ·
 Response `201`: `{ data: { user } }` (password omitted, includes created `profile`). Errors: `409` if email already registered.
 
 ### `POST /auth/login`
-Public. Body: `{ "email": "...", "password": "..." }`. Sets `accessToken` + `refreshToken` cookies. Response `200`: `{ data: null }`. Errors: `401` invalid credentials, `403` account deactivated.
+Public. Body: `{ "email": "...", "password": "..." }`. Sets `accessToken` + `refreshToken` cookies and also returns both tokens in the body (for clients that can't read httpOnly cookies, e.g. the mobile app). Response `200`:
+```json
+{ "data": { "accessToken": "eyJ...", "refreshToken": "eyJ..." } }
+```
+Errors: `401` invalid credentials, `403` account deactivated.
+
+### `POST /auth/refresh-token`
+Public. Issues a new access token from a refresh token. Body (optional): `{ "refreshToken": "eyJ..." }`. If the body has no `refreshToken`, the `refreshToken` cookie is used instead (web clients can send no body). Sets a new `accessToken` cookie. Response `200`:
+```json
+{ "data": { "accessToken": "eyJ..." } }
+```
+The refresh token itself is not rotated; it stays valid until it expires. Errors: `401` missing, invalid, or expired refresh token · `403` the user no longer exists or is deactivated · `400` `refreshToken` present but empty.
+
+### `POST /auth/logout`
+Public. Clears the `accessToken` and `refreshToken` cookies. Response `200`: `{ data: null }`. Tokens are stateless JWTs with no server-side revocation, so a mobile client should delete its stored tokens; an already-issued token stays valid until it expires.
 
 ### `GET /auth/me`
 Auth: any role. Returns the current user's profile (password omitted). `200`: `{ data: { user } }`.
@@ -202,17 +218,23 @@ Validation: `rentalRequestId` UUID · `rating` integer 1–5 · `review` non-emp
 Payment provider: **Stripe Checkout** (`PaymentProvider.STRIPE`; the `SSLCOMMERZ` enum value exists in the schema for extensibility/seed data but no SSLCommerz integration is wired up).
 
 ### `POST /payments/create`
-Auth: **TENANT**. Body: `{ "rentalRequestId": "uuid" }`. Rules:
+Auth: **TENANT**. Body:
+```json
+{ "rentalRequestId": "uuid", "redirectUrl": "rentora://payment-result" }
+```
+`redirectUrl` is optional and meant for the mobile app. It sets where Stripe sends the tenant after checkout, e.g. `rentora://payment-result` in production builds or `exp://192.168.x.x:8081/--/payment-result` in Expo Go. It must start with one of the prefixes in `MOBILE_REDIRECT_PREFIXES`, otherwise `400`. Omit it for the web app.
+
+Rules:
 - Only the tenant who owns the rental request may pay for it.
 - The rental request must be `APPROVED`.
 - `400` if that request already has a `COMPLETED` payment.
-- If a `PENDING` payment / open Stripe session already exists, its checkout URL is reused instead of creating a duplicate.
+- If a `PENDING` payment / open Stripe session already exists with the same return URL, its checkout URL is reused instead of creating a duplicate. If the return URL differs (e.g. checkout started on the web, now paying in the app), the old session is expired and a new one is created.
 
 Creates a Stripe Checkout Session for `property.price` (amount in the smallest currency unit) and a `Payment` row (`status: PENDING`). `201`:
 ```json
 { "data": { "paymentUrl": "https://checkout.stripe.com/...", "payment": { "id": "...", "status": "PENDING", "amount": 25000, "currency": "usd", "provider": "STRIPE", "transactionId": "cs_test_..." } } }
 ```
-Redirect the tenant to `paymentUrl` to complete payment; Stripe returns them to `APP_URL?success=true|false`.
+Redirect the tenant to `paymentUrl` to complete payment. Stripe returns them to `redirectUrl?success=true|false` when `redirectUrl` was given (`&success=` if it already has a query string), otherwise to `APP_URL?success=true|false`. `success` only reflects which button the tenant left through. The webhook is what marks the payment `COMPLETED`, so confirm with `GET /payments/:id`.
 
 ### `POST /payments/webhook`
 Public (verified via Stripe signature, **not** JWT). Consumes the raw request body (registered with `express.raw()` before the JSON parser — see `app.ts`) and the `Stripe-Signature` header. Handles `checkout.session.completed` (marks the `Payment` `COMPLETED`, sets `paidAt`, advances the rental request to `ACTIVE`) and `checkout.session.expired` (marks it `FAILED`). Configure this URL as the endpoint in the Stripe Dashboard / `stripe listen --forward-to`.

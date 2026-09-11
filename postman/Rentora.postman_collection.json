@@ -54,6 +54,41 @@
           "response": []
         },
         {
+          "name": "Refresh Access Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Mobile: send the refreshToken returned by login.\r\n// Web/Postman: send {} and the refreshToken cookie is used instead.\r\n// {\r\n//     \"refreshToken\": \"<refreshToken from login>\"\r\n// }\r\n{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentora}}/auth/refresh-token",
+              "host": ["{{rentora}}"],
+              "path": ["auth", "refresh-token"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{rentora}}/auth/logout",
+              "host": ["{{rentora}}"],
+              "path": ["auth", "logout"]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Get My Profile",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -573,7 +608,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"rentalRequestId\": \"c814e0e9-e948-4e38-b788-63ccbc2c2dcc\"\r\n}",
+              "raw": "// Mobile only: add \"redirectUrl\" (must start with a MOBILE_REDIRECT_PREFIXES prefix), e.g.\r\n// \"redirectUrl\": \"rentora://payment-result\"\r\n{\r\n    \"rentalRequestId\": \"c814e0e9-e948-4e38-b788-63ccbc2c2dcc\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
