@@ -22,4 +22,8 @@ export default {
     | undefined,
   stripe_secret_key: process.env.STRIPE_SECRET_KEY!,
   stripe_webhook_secret: process.env.STRIPE_WEBHOOK_SECRET!,
+  mobile_redirect_prefixes: (process.env.MOBILE_REDIRECT_PREFIXES ?? "")
+    .split(",")
+    .map((prefix) => prefix.trim())
+    .filter(Boolean),
 };

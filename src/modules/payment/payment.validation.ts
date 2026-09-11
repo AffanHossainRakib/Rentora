@@ -3,6 +3,7 @@ import { PaymentStatus } from "../../../prisma/generated/prisma/enums";
 
 export const createPaymentSchema = z.object({
   rentalRequestId: z.uuid("Invalid rental request id"),
+  redirectUrl: z.string().trim().min(1, "redirectUrl cannot be empty").optional(),
 });
 
 export const getPaymentsQuerySchema = z.object({

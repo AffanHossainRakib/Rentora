@@ -21,6 +21,20 @@ const createPayment = async (
   tenantId: string,
   payload: CreatePaymentPayload,
 ) => {
+  const { redirectUrl } = payload;
+
+  if (
+    redirectUrl &&
+    !config.mobile_redirect_prefixes.some((prefix) =>
+      redirectUrl.startsWith(prefix),
+    )
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "redirectUrl is not an allowed redirect target",
+    );
+  }
+
   const rentalRequest = await prisma.rentalRequest.findUnique({
     where: { id: payload.rentalRequestId },
     include: { property: true },
@@ -67,15 +81,23 @@ const createPayment = async (
     );
   }
 
+  const returnUrl = redirectUrl ?? config.app_url;
+  const separator = redirectUrl?.includes("?") ? "&" : "?";
+  const successUrl = `${returnUrl}${separator}success=true`;
+  const cancelUrl = `${returnUrl}${separator}success=false`;
+
   if (existingPendingPayment?.transactionId) {
     const existingSession = await stripe.checkout.sessions
       .retrieve(existingPendingPayment.transactionId)
       .catch(() => null);
     if (existingSession?.status === "open") {
-      return {
-        paymentUrl: existingSession.url,
-        payment: existingPendingPayment,
-      };
+      if (existingSession.success_url === successUrl) {
+        return {
+          paymentUrl: existingSession.url,
+          payment: existingPendingPayment,
+        };
+      }
+      await stripe.checkout.sessions.expire(existingSession.id);
     }
   }
 
@@ -95,14 +117,19 @@ const createPayment = async (
       },
     ],
     metadata: { rentalRequestId: rentalRequest.id },
-    success_url: `${config.app_url}?success=true`,
-    cancel_url: `${config.app_url}?success=false`,
+    success_url: successUrl,
+    cancel_url: cancelUrl,
   });
 
   const payment = existingPendingPayment
     ? await prisma.payment.update({
         where: { id: existingPendingPayment.id },
-        data: { transactionId: session.id, amount, currency: CURRENCY },
+        data: {
+          transactionId: session.id,
+          amount,
+          currency: CURRENCY,
+          status: PaymentStatus.PENDING,
+        },
       })
     : await prisma.payment.create({
         data: {
