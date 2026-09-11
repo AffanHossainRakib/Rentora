@@ -22,3 +22,9 @@ export const loginUserSchema = z.object({
   email: z.string().trim().toLowerCase().pipe(z.email("Invalid email address")),
   password: z.string(),
 });
+
+export const refreshTokenSchema = z
+  .object({
+    refreshToken: z.string().min(1, "Refresh token cannot be empty").optional(),
+  })
+  .default({});

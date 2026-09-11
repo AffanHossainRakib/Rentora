@@ -8,6 +8,12 @@ import config from "../../config";
 
 const isProduction = config.node_env === "production";
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+} as const;
+
 const registerUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const payload = req.body;
@@ -28,16 +34,12 @@ const loginUser = catchAsync(
     const { accessToken, refreshToken } = await authService.loginUser(payload);
 
     res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
+      ...cookieOptions,
       maxAge: parseDurationToMs(config.jwt_access_expires_in ?? "1d"),
     });
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
+      ...cookieOptions,
       maxAge: parseDurationToMs(config.jwt_refresh_expires_in ?? "7d"),
     });
 
@@ -45,6 +47,40 @@ const loginUser = catchAsync(
       success: true,
       statusCode: httpStatus.OK,
       message: "User logged in successfully.",
+      data: { accessToken, refreshToken },
+    });
+  },
+);
+
+const refreshAccessToken = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { accessToken } = await authService.refreshAccessToken(
+      req.body.refreshToken ?? req.cookies.refreshToken,
+    );
+
+    res.cookie("accessToken", accessToken, {
+      ...cookieOptions,
+      maxAge: parseDurationToMs(config.jwt_access_expires_in ?? "1d"),
+    });
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Access token refreshed successfully.",
+      data: { accessToken },
+    });
+  },
+);
+
+const logoutUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.clearCookie("accessToken", cookieOptions);
+    res.clearCookie("refreshToken", cookieOptions);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "User logged out successfully.",
       data: null,
     });
   },
@@ -63,4 +99,10 @@ const getCurrentUser = catchAsync(
   },
 );
 
-export const authController = { registerUser, loginUser, getCurrentUser };
+export const authController = {
+  registerUser,
+  loginUser,
+  refreshAccessToken,
+  logoutUser,
+  getCurrentUser,
+};

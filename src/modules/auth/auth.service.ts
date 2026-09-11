@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import httpStatus from "http-status";
+import { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../../lib/prisma";
 import { loginUserPayload, RegisterUserPayload } from "./auth.interface";
 import { jwtUtils } from "../../utils/jwt";
@@ -103,6 +104,51 @@ const loginUser = async (payload: loginUserPayload) => {
   };
 };
 
+const refreshAccessToken = async (refreshToken?: string) => {
+  if (!refreshToken) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "Refresh token is required");
+  }
+
+  const verifiedToken = jwtUtils.verifyToken(
+    refreshToken,
+    config.jwt_refresh_secret,
+  );
+  if (!verifiedToken.success) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      "Invalid or expired refresh token. Please log in again.",
+    );
+  }
+
+  const { id } = verifiedToken.data as JwtPayload;
+
+  const user = await prisma.user.findUnique({
+    where: { id },
+  });
+
+  if (!user?.isActive) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "Your account is deactivated. Please contact support.",
+    );
+  }
+
+  const jwtPayload = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_access_secret,
+    config.jwt_access_expires_in,
+  );
+
+  return { accessToken };
+};
+
 const getMyProfilefromDB = async (userId: string) => {
   const user = await prisma.user.findUniqueOrThrow({
     where: { id: userId },
@@ -118,5 +164,6 @@ const getMyProfilefromDB = async (userId: string) => {
 export const authService = {
   registerUserIntoDB,
   loginUser,
+  refreshAccessToken,
   getMyProfilefromDB,
 };

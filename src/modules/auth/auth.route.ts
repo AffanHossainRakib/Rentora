@@ -1,7 +1,11 @@
 import { Router } from "express";
 import { authController } from "./auth.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { registerUserSchema, loginUserSchema } from "./auth.validation";
+import {
+  registerUserSchema,
+  loginUserSchema,
+  refreshTokenSchema,
+} from "./auth.validation";
 import { auth } from "../../middlewares/auth";
 import { Role } from "../../../prisma/generated/prisma/enums";
 
@@ -18,6 +22,14 @@ router.post(
   validateRequest({ body: loginUserSchema }),
   authController.loginUser,
 );
+
+router.post(
+  "/refresh-token",
+  validateRequest({ body: refreshTokenSchema }),
+  authController.refreshAccessToken,
+);
+
+router.post("/logout", authController.logoutUser);
 
 router.get(
   "/me",
