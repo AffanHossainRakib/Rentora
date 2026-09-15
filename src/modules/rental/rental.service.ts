@@ -84,6 +84,7 @@ const getMyRentalRequests = async (
       orderBy: { createdAt: "desc" },
       include: {
         property: { include: { category: { select: { name: true } } } },
+        review: true,
       },
     }),
     prisma.rentalRequest.count({ where }),
