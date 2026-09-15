@@ -1,0 +1,188 @@
+/*
+  Rentora design tokens — International Typographic Style.
+
+  Neutrals sit at hue 255 (cool) so they hold quiet tension against the 28°
+  signal red rather than muddying it. Every ink/ground pair below was chosen
+  against a measured contrast target: primary text ≥15:1, secondary ≥6:1,
+  tertiary ≥4.5:1, control boundaries ≥3:1 — and checked on BOTH grounds,
+  since `paper` and `surface` differ. `signal` is Swiss red #E30613, the one
+  step in its ramp that passes AA as text on white *and* under white text.
+  Danger is aliased into the same ramp: Swiss practice keeps one alarm voice.
+*/
+
+:root {
+  color-scheme: light;
+
+  --paper: oklch(0.985 0.002 255);
+  --surface: oklch(1 0 0);
+  --ink: oklch(0.196 0.011 255);
+  --ink-muted: oklch(0.47 0.011 255);
+  --ink-faint: oklch(0.545 0.01 255);
+  --rule: oklch(0.936 0.004 255);
+  --rule-strong: oklch(0.65 0.009 255);
+
+  --signal: oklch(0.577 0.234 28);
+  --signal-ink: oklch(1 0 0);
+  --positive: oklch(0.52 0.15 150);
+  --warning: oklch(0.55 0.13 70);
+  --critical: oklch(0.505 0.203 28);
+  --focus: oklch(0.577 0.234 28);
+
+  --gutter: 1rem;
+}
+
+:root:not([data-theme="light"]) {
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+
+    --paper: oklch(0.178 0.01 255);
+    --surface: oklch(0.216 0.011 255);
+    --ink: oklch(0.967 0.003 255);
+    --ink-muted: oklch(0.79 0.007 255);
+    --ink-faint: oklch(0.665 0.009 255);
+    --rule: oklch(0.3 0.012 255);
+    --rule-strong: oklch(0.54 0.012 255);
+
+    --signal: oklch(0.7 0.18 28);
+    --signal-ink: oklch(0.178 0.01 255);
+    --positive: oklch(0.795 0.113 148);
+    --warning: oklch(0.775 0.098 78);
+    --critical: oklch(0.7 0.18 28);
+    --focus: oklch(0.7 0.18 28);
+  }
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --paper: oklch(0.178 0.01 255);
+  --surface: oklch(0.216 0.011 255);
+  --ink: oklch(0.967 0.003 255);
+  --ink-muted: oklch(0.79 0.007 255);
+  --ink-faint: oklch(0.665 0.009 255);
+  --rule: oklch(0.3 0.012 255);
+  --rule-strong: oklch(0.54 0.012 255);
+
+  --signal: oklch(0.7 0.18 28);
+  --signal-ink: oklch(0.178 0.01 255);
+  --positive: oklch(0.795 0.113 148);
+  --warning: oklch(0.775 0.098 78);
+  --critical: oklch(0.7 0.18 28);
+  --focus: oklch(0.7 0.18 28);
+}
+
+@media (width >= 48rem) {
+  :root {
+    --gutter: 2rem;
+  }
+}
+
+@media (width >= 90rem) {
+  :root {
+    --gutter: 3rem;
+  }
+}
+
+/* Values that swap at runtime must resolve at point of use, hence `inline`. */
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-signal: var(--signal);
+  --color-signal-ink: var(--signal-ink);
+  --color-positive: var(--positive);
+  --color-warning: var(--warning);
+  --color-critical: var(--critical);
+  --color-focus: var(--focus);
+
+  --spacing-gutter: var(--gutter);
+
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-fragment), ui-monospace, monospace;
+}
+
+@theme {
+  /*
+    Two ratios, not one. The UI range (11→16) is nearly flat because a dense
+    interface needs six distinguishable sizes inside five pixels; the display
+    range steps at 1.2, and the hero takes a single 1.33 jump. Line-heights
+    are all multiples of 4 so text lands on the spacing grid, and tracking
+    tightens monotonically as size rises.
+  */
+  --text-micro: 0.6875rem; /* 11 */
+  --text-micro--line-height: 1rem; /* 16 */
+  --text-micro--letter-spacing: 0.01em;
+
+  --text-meta: 0.8125rem; /* 13 */
+  --text-meta--line-height: 1.25rem; /* 20 */
+  --text-meta--letter-spacing: 0em;
+
+  --text-body: 0.9375rem; /* 15 */
+  --text-body--line-height: 1.5rem; /* 24 */
+  --text-body--letter-spacing: -0.002em;
+
+  --text-lead: 1.125rem; /* 18 */
+  --text-lead--line-height: 1.75rem; /* 28 */
+  --text-lead--letter-spacing: -0.008em;
+
+  --text-h4: 1.25rem; /* 20 */
+  --text-h4--line-height: 1.75rem; /* 28 */
+  --text-h4--letter-spacing: -0.011em;
+  --text-h4--font-weight: 600;
+
+  --text-h3: 1.75rem; /* 28 */
+  --text-h3--line-height: 2.25rem; /* 36 */
+  --text-h3--letter-spacing: -0.016em;
+  --text-h3--font-weight: 600;
+
+  --text-h2: 2.125rem; /* 34 */
+  --text-h2--line-height: 2.5rem; /* 40 */
+  --text-h2--letter-spacing: -0.018em;
+  --text-h2--font-weight: 600;
+
+  --text-h1: 2.5rem; /* 40 */
+  --text-h1--line-height: 2.75rem; /* 44 */
+  --text-h1--letter-spacing: -0.02em;
+  --text-h1--font-weight: 600;
+
+  --text-display: 4rem; /* 64 */
+  --text-display--line-height: 4.25rem; /* 68 */
+  --text-display--letter-spacing: -0.025em;
+  --text-display--font-weight: 700;
+
+  /* Uppercase opens up as it shrinks; 0.08em at 11px is the working value. */
+  --tracking-label: 0.08em;
+  --tracking-tight: -0.011em;
+  --tracking-tight-lg: -0.022em;
+
+  /*
+    1224px / 12 columns / 24px gutter divides with zero remainder — an 80px
+    column and a span of (104n − 24). The prose measure is 496px = span(5),
+    which is 71 characters of Instrument Sans at 16px.
+  */
+  --container-shell: 76.5rem; /* 1224 */
+  --container-content: 97.5rem; /* 1560, data tables */
+  --container-prose: 31rem; /* 496 */
+  --container-prose-tight: 24.5rem; /* 392 */
+
+  --animate-dialog: dialog-in 160ms cubic-bezier(0.2, 0, 0, 1);
+  --animate-rise: rise 520ms cubic-bezier(0.2, 0, 0, 1) backwards;
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}

@@ -9,3 +9,20 @@ generated/
 /generated/prisma
 /docs
 .vercel
+
+# Next.js frontend (web/)
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Editor / assistant tooling
+.claude/
+.remember/
+.cursor/
+.aider*
+.playwright-mcp/
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.DS_Store
