@@ -3,12 +3,20 @@ import { propertyController } from "./property.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
 import {
   createPropertySchema,
+  getPropertiesQuerySchema,
   updatePropertySchema,
 } from "./property.validation";
 import { auth } from "../../middlewares/auth";
 import { Role } from "../../../prisma/generated/prisma/enums";
 
 const router = Router();
+
+router.get(
+  "/",
+  auth(Role.LANDLORD),
+  validateRequest({ query: getPropertiesQuerySchema }),
+  propertyController.getMyProperties,
+);
 
 router.post(
   "/",

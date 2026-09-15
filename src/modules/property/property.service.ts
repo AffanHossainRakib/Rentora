@@ -10,13 +10,18 @@ import {
 } from "./property.interface";
 import { assertPropertyOwnership, findCategoryId } from "./property.utils";
 
-const getAllProperties = async (query: GetPropertiesQuery) => {
-  const { searchTerm, location, category, isAvailable, priceMin, priceMax } =
-    query;
+const buildPropertyWhere = (query: GetPropertiesQuery) => {
+  const {
+    searchTerm,
+    location,
+    category,
+    amenities,
+    isAvailable,
+    priceMin,
+    priceMax,
+  } = query;
 
-  const { page, limit, skip } = getPaginationParams(query);
-
-  const where = {
+  return {
     ...(searchTerm && {
       OR: [
         { title: { contains: searchTerm, mode: "insensitive" as const } },
@@ -33,6 +38,14 @@ const getAllProperties = async (query: GetPropertiesQuery) => {
         name: { contains: category, mode: "insensitive" as const },
       },
     }),
+    ...(amenities && {
+      amenities: {
+        hasEvery: amenities
+          .split(",")
+          .map((amenity) => amenity.trim())
+          .filter(Boolean),
+      },
+    }),
     ...(isAvailable !== undefined && { isAvailable }),
     ...((priceMin !== undefined || priceMax !== undefined) && {
       price: {
@@ -41,6 +54,45 @@ const getAllProperties = async (query: GetPropertiesQuery) => {
       },
     }),
   };
+};
+
+const getAllProperties = async (query: GetPropertiesQuery) => {
+  const { page, limit, skip } = getPaginationParams(query);
+  const where = buildPropertyWhere(query);
+
+  const [properties, total] = await Promise.all([
+    prisma.property.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      include: { category: { select: { name: true } } },
+    }),
+    prisma.property.count({ where }),
+  ]);
+
+  const shaped = properties.map(({ category, categoryId, ...rest }) => ({
+    ...rest,
+    category: category.name,
+  }));
+
+  return {
+    properties: shaped,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPage: Math.ceil(total / limit),
+    },
+  };
+};
+
+const getMyProperties = async (
+  landlordId: string,
+  query: GetPropertiesQuery,
+) => {
+  const { page, limit, skip } = getPaginationParams(query);
+  const where = { ...buildPropertyWhere(query), userId: landlordId };
 
   const [properties, total] = await Promise.all([
     prisma.property.findMany({
@@ -72,7 +124,13 @@ const getAllProperties = async (query: GetPropertiesQuery) => {
 const getPropertyById = async (id: string) => {
   const property = await prisma.property.findUnique({
     where: { id },
-    include: { category: { select: { name: true } } },
+    include: {
+      category: { select: { name: true } },
+      landlord: { select: { id: true, name: true, email: true } },
+      reviews: {
+        include: { user: { select: { id: true, name: true } } },
+      },
+    },
   });
 
   if (!property) {
@@ -156,6 +214,7 @@ const deleteProperty = async (userId: string, propertyId: string) => {
 
 export const propertyService = {
   getAllProperties,
+  getMyProperties,
   getPropertyById,
   createProperty,
   updateProperty,

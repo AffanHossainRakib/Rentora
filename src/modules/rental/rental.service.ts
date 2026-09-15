@@ -156,6 +156,7 @@ const getLandlordRequests = async (
       orderBy: { createdAt: "desc" },
       include: {
         property: { include: { category: { select: { name: true } } } },
+        tenant: { select: { id: true, name: true, email: true } },
       },
     }),
     prisma.rentalRequest.count({ where }),

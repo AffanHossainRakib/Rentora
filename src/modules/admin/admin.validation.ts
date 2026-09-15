@@ -7,6 +7,7 @@ export const updateUserStatusSchema = z.object({
 
 export const getUsersQuerySchema = z.object({
   role: z.enum(Role).optional(),
+  searchTerm: z.string().trim().optional(),
   page: z.coerce.number().int().positive().optional(),
   limit: z.coerce.number().int().positive().optional(),
 });

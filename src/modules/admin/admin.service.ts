@@ -5,10 +5,18 @@ import { getPaginationParams } from "../../utils/pagination";
 import { GetUsersQuery, PaginationQuery } from "./admin.interface";
 
 const getAllUsers = async (query: GetUsersQuery) => {
-  const { role } = query;
+  const { role, searchTerm } = query;
   const { page, limit, skip } = getPaginationParams(query);
 
-  const where = { ...(role && { role }) };
+  const where = {
+    ...(role && { role }),
+    ...(searchTerm && {
+      OR: [
+        { name: { contains: searchTerm, mode: "insensitive" as const } },
+        { email: { contains: searchTerm, mode: "insensitive" as const } },
+      ],
+    }),
+  };
 
   const [users, total] = await Promise.all([
     prisma.user.findMany({

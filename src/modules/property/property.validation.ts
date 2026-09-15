@@ -17,6 +17,7 @@ export const getPropertiesQuerySchema = z.object({
   searchTerm: z.string().trim().optional(),
   location: z.string().trim().optional(),
   category: z.string().trim().optional(),
+  amenities: z.string().trim().optional(),
   isAvailable: z.stringbool().optional(),
   priceMin: z.coerce.number().nonnegative().optional(),
   priceMax: z.coerce.number().nonnegative().optional(),
